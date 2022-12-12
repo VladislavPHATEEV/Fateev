@@ -3,6 +3,8 @@ from openpyxl.styles import Font, Border, Side
 from openpyxl.utils import get_column_letter
 from openpyxl import Workbook
 
+#ЧТО ТО ДРУГОЕ
+
 class Vacancy:
     curr_to_rub = {
 		"KZT": 0.13, "RUR": 1, "UAH": 1.64, "USD": 60.66, "UZS": 0.0055,
