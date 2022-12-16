@@ -72,7 +72,6 @@ fieldToRus = {
     "published_at": "Дата публикации вакансии"
 }
 
-
 def get_key(d, value):
     """Получает первый ключ по значению
 
@@ -92,7 +91,6 @@ def get_key(d, value):
     for k, v in d.items():
         if v == value:
             return k
-
 
 class Salary:
     """Класс для представления зарплаты.
@@ -207,28 +205,6 @@ class Vacancy:
         splitted_date = self.published_at.split("T")[0].split("-")
         date_string = splitted_date[2] + "." + splitted_date[1] + "." + splitted_date[0]
         return date_string
-
-    # def date_to_datetime_1(self):
-    #    datetime_object = datetime.datetime.strptime(self.published_at.split("+")[0], f"%Y-%m-%dT%H:%M:%S")
-    #    return datetime_object
-
-    # def date_to_datetime_2(self):
-    #    mdy = list((map(int, self.published_at.split("T")[0].split("-"))))
-    #    hms = list(map(int, self.published_at.split("T")[1].split("+")[0].split(":")))
-    #    datetime_object = datetime.datetime(mdy[0], mdy[1], mdy[2], hms[0], hms[1], hms[2])
-    #    return datetime_object
-
-    # def date_to_datetime_3(self):
-    #    mdy = self.published_at.split("T")[0].split("-")
-    #    hms = self.published_at.split("T")[1].split("+")[0].split(":")
-    #    year = int(mdy[0])
-    #    month = int(mdy[1])
-    #    day = int(mdy[2])
-    #    hour = int(hms[0])
-    #    minute = int(hms[1])
-    #    second = int(hms[2])
-    #    datetime_object = datetime.datetime(year, month, day, hour, minute, second)
-    #    return datetime_object
 
     def date_get_year(self):
         """Получить год публикации вакансии
@@ -473,6 +449,23 @@ class InputConect:
             columns.append("№")
         return columns
 
+class DataSet:
+    """Класс для хранения названия файла и всех вакансий
+
+        Attributes:
+            file_name (str): Имя файла
+            vacancies_objects (list): Вакансии
+    """
+
+    def __init__(self, ﬁle_name: str, vacancies_objects: list):
+        """Инициализирует объект DataSet
+
+        Args:
+            ﬁle_name (str): Имя файла
+            vacancies_objects (list): Вакансии
+        """
+        self.file_name = file_name
+        self.vacancies_objects = vacancies_objects
 
 class Table:
     """Класс для работы с таблицей.
@@ -602,26 +595,6 @@ class Table:
                 return False
         return True
 
-
-class DataSet:
-    """Класс для хранения названия файла и всех вакансий
-
-        Attributes:
-            file_name (str): Имя файла
-            vacancies_objects (list): Вакансии
-    """
-
-    def __init__(self, ﬁle_name: str, vacancies_objects: list):
-        """Инициализирует объект DataSet
-
-        Args:
-            ﬁle_name (str): Имя файла
-            vacancies_objects (list): Вакансии
-        """
-        self.file_name = file_name
-        self.vacancies_objects = vacancies_objects
-
-
 class CsvWorker:
     """Класс для работы с CSV файлом
 
@@ -647,6 +620,23 @@ class CsvWorker:
             print("Пустой файл")
             return False
         return True
+
+    def сsv_reader(self):
+        """Читает файл, создает list Вакансий и list Полей
+
+            Returns:
+                list, list: Вакансии, Поля
+        """
+        fields = []
+        vacancies = []
+        with open(ﬁle_name, encoding="UTF-8-sig") as File:
+            reader = csv.reader(File, delimiter=',')
+            for row in reader:
+                if (fields == []):
+                    fields = row
+                elif (len(fields) == len(row) and not ("" in row)):
+                    vacancies.append(self.csv_ﬁler(row, fields))
+        return vacancies, fields
 
     def csv_ﬁler(self, vacancy_in, fields):
         """Создает вакансию, находя необходимые аттрибуты для нее
@@ -674,28 +664,10 @@ class CsvWorker:
                           published_at)
         return vacancy
 
-    def сsv_reader(self):
-        """Читает файл, создает list Вакансий и list Полей
-
-            Returns:
-                list, list: Вакансии, Поля
-        """
-        fields = []
-        vacancies = []
-        with open(ﬁle_name, encoding="UTF-8-sig") as File:
-            reader = csv.reader(File, delimiter=',')
-            for row in reader:
-                if (fields == []):
-                    fields = row
-                elif (len(fields) == len(row) and not ("" in row)):
-                    vacancies.append(self.csv_ﬁler(row, fields))
-        return vacancies, fields
-
 
 class HtmlGenerator:
     """Класс для генерации HTML страницы
     """
-
     def generate_table(self, titles, content):
         """Возвращает HTML код таблицы
 
@@ -725,21 +697,6 @@ class HtmlGenerator:
         string = "<tr>"
         for title in titles:
             string += "<th>" + title + "</th>"
-        string += "</tr>"
-        return string
-
-    def generate_row(self, row):
-        """Возвращает HTML код для строки таблицы
-
-            Args:
-                row (list): Строка таблицы
-
-            Returns:
-                str: HTML код для строки
-        """
-        string = "<tr>"
-        for row_item in row:
-            string += "<td>" + str(row_item) + "</td>"
         string += "</tr>"
         return string
 
@@ -791,7 +748,6 @@ class HtmlGenerator:
             row = [year, avgSalary, avgSalaryProf, vacAmount, vacAmountProf]
             html += self.generate_row(row)
         html += """</table> <br>"""
-
         # 2
         titles = ["Город", "Уровень зарплат"]
         html += "<h1 style='text-align:center;'>Статистика по городам</h1>"
@@ -805,7 +761,6 @@ class HtmlGenerator:
             row = [city, avgSalary]
             html += self.generate_row(row)
         html += "</table>"
-
         # 3
         titles = ["Город", "Доля вакансий"]
         html += "<table style='float: right; width: 45%;'>" + self.generate_titles(titles)
@@ -820,6 +775,21 @@ class HtmlGenerator:
         html += "</table></body></html>"
         return html
 
+    def generate_row(self, row):
+        """Возвращает HTML код для строки таблицы
+
+            Args:
+                row (list): Строка таблицы
+
+            Returns:
+                str: HTML код для строки
+        """
+        string = "<tr>"
+        for row_item in row:
+            string += "<td>" + str(row_item) + "</td>"
+        string += "</tr>"
+        return string
+
 
 class Report:
     """Класс для создания графиков
@@ -828,7 +798,6 @@ class Report:
             filename (str): Имя файла
             html (str): HTML код страницы
     """
-
     def __init__(self, name, dicts, prof_name):
         """Инициализирует объект Report, генерирует граф и создает HTML код страницы
             Args:
@@ -855,7 +824,6 @@ class Report:
         plt.grid(axis='y')
         plt.style.use('ggplot')
         plt.rcParams.update({'font.size': 8})
-
         x = np.arange(len(years))
         width = 0.35
         ax = plt.subplot(2, 2, 1)
@@ -864,30 +832,79 @@ class Report:
         ax.legend()
         ax.set_xticks(x, years, rotation=90)
         plt.title("Уровень зарплат по годам")
-
         ax = plt.subplot(2, 2, 2)
         ax.bar(x - width / 2, dictsSalary[2].values(), width, label='Количество вакансий')
         ax.bar(x + width / 2, dictsSalary[4].values(), width, label='Количество вакансий\n' + prof_name)
         ax.legend()
         ax.set_xticks(x, years, rotation=90)
         plt.title("Количество вакансий по годам")
-
         plt.subplot(2, 2, 3)
         plt.barh(list(reversed(list(dictsCities[0].keys()))), list(reversed(dictsCities[0].values())), alpha=0.8, )
         plt.title("Уровень зарплат по городам")
-
         plt.subplot(2, 2, 4)
         plt.pie(list(dictsCities[1].values()) + [1 - sum(list(dictsCities[1].values()))],
                 labels=list(dictsCities[1].keys()) + ["Другие"])
         plt.title("Доля вакансий по городам")
         plt.subplots_adjust(wspace=0.5, hspace=0.5)
-
         plt.savefig("temp.png", dpi=200, bbox_inches='tight')
 
 
 class DataWorker:
     """Класс для статистической обработки вакансий
     """
+    def print_data(self, data, total_vacancies):
+        """Обрабатывает вакансии и возвращает словари для создания таблиц, графиков и выводит данные этих словарей
+
+            Args:
+                data (list): Статистические данные
+                total_vacancies (int): Общеее число вакансий
+
+            Returns:
+                [dict, dict]: Данные для создания таблиц и графиков
+        """
+        temp = {}
+        salaryDict = []
+        cityDict = []
+        for x in data["salary"].keys():
+            temp[x] = int(sum(data["salary"][x]) / len(data["salary"][x]))
+        print("Динамика уровня зарплат по годам:", temp)
+        salaryDict.append(list(list(data["salary"].keys())[i] for i in range(len(data["salary"].keys()))))
+        salaryDict.append(temp)
+        print("Динамика количества вакансий по годам:", data["amount"])
+        salaryDict.append(data["amount"])
+        temp = {list(data["salary"].keys())[i]: 0 for i in range(len(data["salary"].keys()))}
+        for x in data["salary_prof"].keys():
+            temp[x] = int(sum(data["salary_prof"][x]) / len(data["salary_prof"][x]))
+        print("Динамика уровня зарплат по годам для выбранной профессии:", temp)
+        salaryDict.append(temp)
+        if len(data["amount_prof"]) != 0:
+            print("Динамика количества вакансий по годам для выбранной профессии:", data["amount_prof"])
+            salaryDict.append(data["amount_prof"])
+        else:
+            temp = {list(data["salary"].keys())[i]: 0 for i in range(len(data["salary"].keys()))}
+            print("Динамика количества вакансий по годам для выбранной профессии:", temp)
+            salaryDict.append(temp)
+        temp = {}
+        if "Россия" in data["salary_city"]:
+            data["salary_city"].pop("Россия")
+        for x in data["salary_city"].keys():
+            percent = len(data["salary_city"][x]) / total_vacancies
+            if (percent >= 0.01):
+                temp[x] = int(sum(data["salary_city"][x]) / len(data["salary_city"][x]))
+        temp = dict(sorted(temp.items(), key=lambda x: x[1], reverse=True)[:10])
+        print("Уровень зарплат по городам (в порядке убывания):", temp)
+        cityDict.append(temp)
+        temp = {}
+        if "Россия" in data["amount_city"]:
+            data["amount_city"].pop("Россия")
+        for x in data["amount_city"].keys():
+            percent = data["amount_city"][x] / total_vacancies
+            if (percent >= 0.01):
+                temp[x] = round(percent, 4)
+        temp = dict(sorted(temp.items(), key=lambda x: x[1], reverse=True)[:10])
+        print("Доля вакансий по городам (в порядке убывания):", temp)
+        cityDict.append(temp)
+        return [salaryDict, cityDict]
 
     def get_data(self, vacancies_objects, prof_name):
         """Обрабатывает вакансии и возвращает статистические данные
@@ -930,7 +947,6 @@ class DataWorker:
                     dict["amount_prof"][year] = 1
                 else:
                     dict["amount_prof"][year] += 1
-
             # Уровень зарплат по городам (в порядке убывания)
             if vacancy.area_name not in dict["salary_city"]:
                 dict["salary_city"][vacancy.area_name] = [avg_salary]
@@ -942,64 +958,6 @@ class DataWorker:
             else:
                 dict["amount_city"][vacancy.area_name] += 1
         return dict
-
-    def print_data(self, data, total_vacancies):
-        """Обрабатывает вакансии и возвращает словари для создания таблиц, графиков и выводит данные этих словарей
-
-            Args:
-                data (list): Статистические данные
-                total_vacancies (int): Общеее число вакансий
-
-            Returns:
-                [dict, dict]: Данные для создания таблиц и графиков
-        """
-        temp = {}
-        salaryDict = []
-        cityDict = []
-        for x in data["salary"].keys():
-            temp[x] = int(sum(data["salary"][x]) / len(data["salary"][x]))
-        print("Динамика уровня зарплат по годам:", temp)
-        salaryDict.append(list(list(data["salary"].keys())[i] for i in range(len(data["salary"].keys()))))
-        salaryDict.append(temp)
-        print("Динамика количества вакансий по годам:", data["amount"])
-        salaryDict.append(data["amount"])
-        temp = {list(data["salary"].keys())[i]: 0 for i in range(len(data["salary"].keys()))}
-        for x in data["salary_prof"].keys():
-            temp[x] = int(sum(data["salary_prof"][x]) / len(data["salary_prof"][x]))
-        print("Динамика уровня зарплат по годам для выбранной профессии:", temp)
-        salaryDict.append(temp)
-
-        if len(data["amount_prof"]) != 0:
-            print("Динамика количества вакансий по годам для выбранной профессии:", data["amount_prof"])
-            salaryDict.append(data["amount_prof"])
-        else:
-            temp = {list(data["salary"].keys())[i]: 0 for i in range(len(data["salary"].keys()))}
-            print("Динамика количества вакансий по годам для выбранной профессии:", temp)
-
-            salaryDict.append(temp)
-
-        temp = {}
-        if "Россия" in data["salary_city"]:
-            data["salary_city"].pop("Россия")
-        for x in data["salary_city"].keys():
-            percent = len(data["salary_city"][x]) / total_vacancies
-            if (percent >= 0.01):
-                temp[x] = int(sum(data["salary_city"][x]) / len(data["salary_city"][x]))
-        temp = dict(sorted(temp.items(), key=lambda x: x[1], reverse=True)[:10])
-        print("Уровень зарплат по городам (в порядке убывания):", temp)
-        cityDict.append(temp)
-        temp = {}
-        if "Россия" in data["amount_city"]:
-            data["amount_city"].pop("Россия")
-        for x in data["amount_city"].keys():
-            percent = data["amount_city"][x] / total_vacancies
-            if (percent >= 0.01):
-                temp[x] = round(percent, 4)
-        temp = dict(sorted(temp.items(), key=lambda x: x[1], reverse=True)[:10])
-        print("Доля вакансий по городам (в порядке убывания):", temp)
-        cityDict.append(temp)
-        return [salaryDict, cityDict]
-
 
 if __name__ == "__main__":
     doctest.testmod()
