@@ -1,0 +1,55 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Аналитика</title>
+</head>
+<body style="font-family: Verdana, Geneva, Tahoma, sans-serif; text-align: center;">
+    <h1>Аналитика по зарплатам и городам для профессии {{vacancy_name}}</h1>
+    <img src="file:///C:/Users/User/Documents/GitHub/Masalov/town_graph.png" 
+        style="margin: 0 auto; display: block; width: 100%; height: auto">
+    <h2>Статистика по годам</h2>
+    <table style="margin:0; width:100%; height: auto; border-collapse: collapse;">
+        <tr style="margin:0; padding:0">
+            {% for cell in years_headlines %}
+            <td style="text-align: center; font-weight: bold; padding: 5px; margin:0; border: 1px solid black;">{{cell}}</td>
+            {% endfor %}
+        </tr>
+        {% for row in years_values %}
+        <tr style="margin: 0; padding:0">
+            {% for cell in row %}
+            <td style="text-align: center; padding: 5px; margin: 0 0; border: 1px solid black;">{{cell}}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    <h2>Статистика по городам</h2>
+        <table style="margin:0; display:inline; width:45%; border-collapse: collapse;">
+            <tr style="margin: 0 0; padding:0 0">
+                {% for cell in towns_salaries_headlines %}
+                <td style="text-align: center; font-weight: bold; padding: 5px; margin: 0 0; border: 1px solid black;">{{cell}}</td>
+                {% endfor %}
+            </tr>
+            {% for row in towns_salaries_values %}
+            <tr style="margin:0; padding:0">
+                {% for cell in row %}
+                <td style="text-align: center; padding: 5px; margin: 0 0; border: 1px solid black;">{{cell}}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+        <table style="margin:0; display: inline; width:45%; border-collapse: collapse;">
+            <tr style="margin: 0 0; padding:0 0">
+                {% for cell in towns_rates_headlines %}
+                <td style="text-align: center; font-weight: bold; padding: 5px; margin: 0 0; border: 1px solid black;">{{cell}}</td>
+                {% endfor %}
+            </tr>
+            {% for row in towns_rates_values %}
+            <tr style="margin:0; padding:0">
+                {% for cell in row %}
+                <td style="text-align: center; padding: 5px; margin: 0 0; border: 1px solid black;">{{cell}}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+</body>
+</html>
