@@ -1,0 +1,10 @@
+
+.idea/
+*.csv
+venv
+.png
+.pdf
+.xlsx
+db.sqlite
+!hh_unloading.csv
+!sample_vacancies.csv
